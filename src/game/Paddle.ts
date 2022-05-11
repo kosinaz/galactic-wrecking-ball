@@ -17,6 +17,15 @@ export default class Paddle extends Phaser.Physics.Matter.Image
     this.ball.setVelocity(0, 0)
   }
 
+  launch() 
+  {
+    if(!this.ball) {
+      return
+    }
+    this.ball.setVelocity(1, -8)
+    this.ball = undefined
+  }
+
   update(cursors: Phaser.Types.Input.Keyboard.CursorKeys)
   {
     const speed = 10
