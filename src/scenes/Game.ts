@@ -25,19 +25,14 @@ export default class Game extends Phaser.Scene
   {
     const { width, height } = this.scale
 
-    this.ball = this.matter.add.image(400, 300, 'ball', undefined, {
-      circleRadius: 10,
-    })
-    this.ball.setFriction(0, 0, 0)
+    this.ball = this.matter.add.image(400, 300, 'ball')
+    this.ball.setCircle(10)
     this.ball.setBounce(1)
-    const body = this.ball.body as MatterJS.BodyType;
-    this.matter.body.setInertia(body, Infinity)
     this.ball.setOnCollide(this.handleBallCollide.bind(this))
 
-    this.paddle = new Paddle(this.matter.world, width * 0.5, height * 0.9, 'paddle', {
-      vertices: this.cache.json.get('shape').vertices[0],
-      isStatic: true
-    })
+    this.paddle = new Paddle(this.matter.world, width * 0.5, height * 0.9, 'paddle')
+    this.paddle.setCircle(75)
+    this.paddle.setStatic(true)
     this.paddle.attachBall(this.ball)
 
     let x = 128
@@ -80,7 +75,9 @@ export default class Game extends Phaser.Scene
     }
     this.paddle.update(this.cursors)
 
-    const ballVelocity = new Phaser.Math.Vector2(this.ball.body.velocity).normalize().scale(8)
-    this.ball.setVelocity(ballVelocity.x, ballVelocity.y)
+    if (!this.paddle.getBall()) {
+      const ballVelocity = new Phaser.Math.Vector2(this.ball.body.velocity).normalize().scale(8)
+      this.ball.setVelocity(ballVelocity.x, ballVelocity.y)
+    }
   }
 }

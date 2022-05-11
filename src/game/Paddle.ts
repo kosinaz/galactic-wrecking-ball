@@ -17,6 +17,10 @@ export default class Paddle extends Phaser.Physics.Matter.Image
     this.ball.setVelocity(0, 0)
   }
 
+  getBall () {
+    return this.ball
+  }
+
   launch() 
   {
     if(!this.ball) {
