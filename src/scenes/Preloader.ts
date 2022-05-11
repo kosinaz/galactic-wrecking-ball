@@ -17,7 +17,6 @@ export default class Preloader extends Phaser.Scene
 
   create()
   {
-    console.log(this.cache.json.get('shape'))
     this.scene.start('game')
   }
 }
