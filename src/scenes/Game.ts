@@ -62,11 +62,11 @@ export default class Game extends Phaser.Scene
 
   private addLine()
   {
-    for (let x = 0; x < 8; x++) 
+    for (let x = 0; x < 10; x++) 
     {
-      if (Phaser.Math.Between(0, 4))
+      if (Phaser.Math.Between(0, 3))
       {
-        const block = this.matter.add.image(x * 100 + 50, -25, 'block')
+        const block = this.matter.add.image(x * 80 + 40, -15, 'block')
         block.setStatic(true)
         block.setTint(0xff0000)
         this.blocks.push(block)
@@ -106,7 +106,7 @@ export default class Game extends Phaser.Scene
         return
       }
       block.y += 0.1
-      if (block.y < 25) {
+      if (block.y < block.height * 0.5) {
         newLineRequired = false
       }
     })
