@@ -30,6 +30,7 @@ export default class Game extends Phaser.Scene
     this.ball = this.matter.add.image(400, 300, 'ball')
     this.ball.setCircle(10)
     this.ball.setBounce(1)
+    this.ball.setTint(0x0088ff)
     this.ball.setOnCollide(this.handleBallCollide.bind(this))
 
     this.paddle = new Paddle(this.matter.world, width * 0.5, height, 'paddle')
@@ -48,6 +49,48 @@ export default class Game extends Phaser.Scene
   
   private handleBallCollide(data: Phaser.Types.Physics.Matter.MatterCollisionData)
   {
+    if (data.bodyA.gameObject?.texture.key === 'ball') 
+    {
+      this.add.tween({
+        targets: data.bodyA.gameObject,
+        duration: 100,
+        ease: 'Cubic',
+        yoyo: true,
+        scale: 1.5
+      })
+      this.tweens.addCounter({
+        from: 0,
+        to: 127,
+        yoyo: true,
+        duration: 100,
+        onUpdate: tween => 
+        {
+          const value = Math.floor(tween.getValue());
+          data.bodyA.gameObject.setTint(Phaser.Display.Color.GetColor(0, 128 + value, 255));
+        }
+      })
+    }
+    if (data.bodyB.gameObject?.texture.key === 'ball') 
+    {
+      this.add.tween({
+        targets: data.bodyB.gameObject,
+        duration: 100,
+        ease: 'Cubic',
+        yoyo: true,
+        scale: 1.5
+      })
+      this.tweens.addCounter({
+        from: 0,
+        to: 127,
+        yoyo: true,
+        duration: 100,
+        onUpdate: tween => 
+        {
+          const value = Math.floor(tween.getValue());
+          data.bodyB.gameObject.setTint(Phaser.Display.Color.GetColor(0, 128 + value, 255));
+        }
+      })
+    }
     if (data.bodyA.gameObject?.texture.key === 'block') 
     {
       data.bodyA.gameObject.destroy()
@@ -82,6 +125,19 @@ export default class Game extends Phaser.Scene
       this.livesLabel.text = `Lives:  ${this.lives}`
       this.paddle.attachBall(this.ball)
       return
+    }
+    if (!this.tweens.isTweening(this.ball))
+    {
+      if (this.ball.scale > 1)
+      {
+        this.ball.scale -= 0.1
+        this.ball.setTint(Phaser.Display.Color.GetColor(0, 128 * this.ball.scale, 255));
+      } 
+      else if (this.ball.scale < 1)
+      {
+        this.ball.scale = 1
+        this.ball.setTint(Phaser.Display.Color.GetColor(0, 128, 255));
+      }
     }
 
     const spaceJustDown = Phaser.Input.Keyboard.JustDown(this.cursors.space!)
